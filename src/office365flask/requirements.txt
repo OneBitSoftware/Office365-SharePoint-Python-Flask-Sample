@@ -1,0 +1,4 @@
+Flask<1
+requests[security]==2.7
+Flask-SSLify==0.1.5
+PyJWT==1.4.0
