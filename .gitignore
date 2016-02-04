@@ -58,5 +58,10 @@ docs/_build/
 # PyBuilder
 target/
 
-#Ipython Notebook
+# Ipython Notebook
 .ipynb_checkpoints
+
+# Visual Studio
+src/office365flask/bin/
+src/office365flask/env/
+src/office365flask/obj/
