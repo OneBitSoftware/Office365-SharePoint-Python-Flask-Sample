@@ -40,9 +40,10 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="fail.txt" />
-    <Content Include="foo.png" />
     <Content Include="office365flask.pem" />
     <Content Include="success.txt" />
+    <Content Include="templates\index.html" />
+    <Content Include="templates\layout.html" />
     <None Include="office365flask3 - Web Deploy.pubxml" />
     <Content Include="requirements.txt" />
   </ItemGroup>
@@ -58,6 +59,10 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X86</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="static\" />
+    <Folder Include="templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
