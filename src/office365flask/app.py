@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, json, redirect, session, render_template, url_for, flash
+from flask import Flask, request, redirect, session, render_template, url_for, flash
 from office365 import login_url, tenant_url, client_assertion, access_token, upload_file
 
 app = Flask(__name__)

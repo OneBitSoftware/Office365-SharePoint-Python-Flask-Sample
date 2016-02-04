@@ -1,15 +1,15 @@
-import uuid, jwt, base64, json, requests, time
-from urllib import quote_plus
+import uuid, jwt, base64, requests, time
+from six.moves.urllib.parse import quote
 
 def login_url(redirect_uri, client_id, resource, authority):
     params = '?client_id='+client_id
-    params += '&redirect_uri='+quote_plus(redirect_uri)
+    params += '&redirect_uri='+quote(redirect_uri)
     params += '&response_type=id_token'
     params += '&scope=openid'
     params += '&nonce='+str(uuid.uuid4())
     params += '&prompt=admin_consent'
     params += '&response_mode=form_post'
-    params += '&resource='+quote_plus(resource)
+    params += '&resource='+quote(resource)
     return '{0}/common/oauth2/authorize{1}'.format(authority, params)
 
 def tenant_url(id_token, authority):
@@ -41,7 +41,6 @@ def access_token(tenant_url, redirect_uri, client_id, resource, client_assertion
 def upload_file(url, fname, file, token):
     headers = { 'Content-Type':'application/json',
                 'Authorization': 'Bearer {0}'.format(token),
-                'User-Agent': 'python_clientcred/1.0',
                 'Accept': 'application/json'
                }
     r = requests.post("{0}/_api/web/lists/getbytitle('Documents')/rootfolder/files/add(url='{1}', overwrite=true)".format(url, fname), data=file, headers=headers)
