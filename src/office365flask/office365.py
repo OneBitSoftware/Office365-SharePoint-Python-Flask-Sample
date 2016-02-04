@@ -1,7 +1,7 @@
 import uuid, jwt, base64, json, requests, time
 from urllib import quote_plus
 
-def oauth_url(redirect_uri, client_id, resource, authority):
+def login_url(redirect_uri, client_id, resource, authority):
     params = '?client_id='+client_id
     params += '&redirect_uri='+quote_plus(redirect_uri)
     params += '&response_type=code+id_token'

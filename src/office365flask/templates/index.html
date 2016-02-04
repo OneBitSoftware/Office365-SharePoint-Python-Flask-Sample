@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    {% if is_authenticated %}
+        <form method="post" action="{{url_for('upload')}}" enctype="multipart/form-data">
+            <input type="file" name="file"/>
+            <input type="submit"/>
+        </form>
+    {% else %}
+        <a href="{{url}}">Office365 Sign in</a>
+    {% endif %}
+
+{% endblock %}

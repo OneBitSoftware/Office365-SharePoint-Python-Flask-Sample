@@ -1,6 +1,6 @@
 import os
-from flask import Flask, request, json, redirect, session
-from office365 import oauth_url, tenant_url, client_assertion, access_token, upload_file
+from flask import Flask, request, json, redirect, session, render_template
+from office365 import login_url, tenant_url, client_assertion, access_token, upload_file
 
 app = Flask(__name__)
 app.config.from_pyfile('app.cfg')
@@ -11,15 +11,9 @@ wsgi_app = app.wsgi_app
 
 @app.route('/')
 def hello(): 
-    if 'access_token' in session:
-        return '''<form method="post" action="/upload" enctype="multipart/form-data">
-                    <input type="file" name="file" />
-                    <input type="submit"/>
-                    </form>
-                '''
     redirect_uri = request.host_url + 'auth'
-    url = oauth_url(redirect_uri, c['CLIENT_ID'], c['RESOURCE'], c['AUTHORITY'])
-    return '<a href="' + url + '">Office365 Sign in</a>'
+    url = login_url(redirect_uri, c['CLIENT_ID'], c['RESOURCE'], c['AUTHORITY'])
+    return render_template('index.html', url=url, is_authenticated='access_token' in session)
 
 @app.route('/auth', methods=['POST'])
 def auth():
