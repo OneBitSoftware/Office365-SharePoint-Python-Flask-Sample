@@ -4,7 +4,7 @@ from urllib import quote_plus
 def login_url(redirect_uri, client_id, resource, authority):
     params = '?client_id='+client_id
     params += '&redirect_uri='+quote_plus(redirect_uri)
-    params += '&response_type=code+id_token'
+    params += '&response_type=id_token'
     params += '&scope=openid'
     params += '&nonce='+str(uuid.uuid4())
     params += '&prompt=admin_consent'
@@ -28,14 +28,14 @@ def client_assertion(tenant_url, client_id, cert_tprint, cert_path):
     key = open(cert_path, 'r').read()
     return jwt.encode(payload, key, 'RS256', header)
 
-def access_token(tenant_url, redirect_uri, client_id, resource, client_assertion, ssl=False):
+def access_token(tenant_url, redirect_uri, client_id, resource, client_assertion):
     data = { 'resource': resource,
              'client_id': client_id,
              'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
              'client_assertion': client_assertion,
              'grant_type': 'client_credentials',
              'redirect_uri': redirect_uri }
-    r = requests.post(tenant_url, data=data, verify=ssl)
+    r = requests.post(tenant_url, data=data)
     return r.json()['access_token']
 
 def upload_file(url, fname, file, token):
