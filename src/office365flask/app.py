@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, json, redirect, session, render_template
+from flask import Flask, request, json, redirect, session, render_template, url_for
 from office365 import login_url, tenant_url, client_assertion, access_token, upload_file
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ c = app.config
 wsgi_app = app.wsgi_app
 
 @app.route('/')
-def hello(): 
+def home(): 
     redirect_uri = request.host_url + 'auth'
     url = login_url(redirect_uri, c['CLIENT_ID'], c['RESOURCE'], c['AUTHORITY'])
     return render_template('index.html', url=url, is_authenticated='access_token' in session)
@@ -22,7 +22,7 @@ def auth():
     sharepoint_url = tenant_url(token_id, c['AUTHORITY'])
     assertion = client_assertion(sharepoint_url, c['CLIENT_ID'], c['CERT_THUMBPRINT'], c['CERT_PATH'])
     session['access_token'] = access_token(sharepoint_url, redirect_uri, c['CLIENT_ID'], c['RESOURCE'], assertion)
-    return redirect("/")
+    return redirect(url_for('home'))
 
 @app.route('/upload', methods=['POST'])
 def upload():
