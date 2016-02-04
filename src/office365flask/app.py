@@ -18,7 +18,7 @@ def home():
 @app.route('/auth', methods=['POST'])
 def auth():
     token_id = request.form['id_token']
-    redirect_uri = request.host_url + 'auth'
+    redirect_uri = '{0}auth'.format(request.host_url)
     sharepoint_url = tenant_url(token_id, c['AUTHORITY'])
     assertion = client_assertion(sharepoint_url, c['CLIENT_ID'], c['CERT_THUMBPRINT'], c['CERT_PATH'])
     session['access_token'] = access_token(sharepoint_url, redirect_uri, c['CLIENT_ID'], c['RESOURCE'], assertion)

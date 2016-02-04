@@ -10,11 +10,11 @@ def login_url(redirect_uri, client_id, resource, authority):
     params += '&prompt=admin_consent'
     params += '&response_mode=form_post'
     params += '&resource='+quote_plus(resource)
-    return authority + '/common/oauth2/authorize' + params
+    return '{0}/common/oauth2/authorize{1}'.format(authority, params)
 
 def tenant_url(id_token, authority):
     tenant_id = jwt.decode(id_token, verify=False)['tid'] 
-    return authority + '/' + tenant_id + '/oauth2/token'
+    return '{0}/{1}/oauth2/token'.format(authority, tenant_id)
 
 def client_assertion(tenant_url, client_id, cert_tprint, cert_path):
     now = int(time.time()) - 300 #time skew between two machines
@@ -36,13 +36,13 @@ def access_token(tenant_url, redirect_uri, client_id, resource, client_assertion
              'grant_type': 'client_credentials',
              'redirect_uri': redirect_uri }
     r = requests.post(tenant_url, data=data, verify=ssl)
-    return str(r.json()['access_token'])
+    return r.json()['access_token']
 
 def upload_file(url, fname, file, token):
     headers = { 'Content-Type':'application/json',
-                'Authorization': 'Bearer ' + token,
+                'Authorization': 'Bearer {0}'.format(token),
                 'User-Agent': 'python_clientcred/1.0',
                 'Accept': 'application/json'
                }
-    r = requests.post(url + "/_api/web/lists/getbytitle('Documents')/rootfolder/files/add(url='"+str(fname)+"', overwrite=true)", data=file, headers=headers)
+    r = requests.post("{0}/_api/web/lists/getbytitle('Documents')/rootfolder/files/add(url='{1}', overwrite=true)".format(url, fname), data=file, headers=headers)
     return r.status_code == 200
