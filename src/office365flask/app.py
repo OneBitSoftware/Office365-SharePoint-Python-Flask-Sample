@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, redirect, session, render_template, url_for, flash
-from office365 import login_url, tenant_url, client_assertion, access_token, upload_file
+from office365 import login_url, tenant_url, access_token, upload_file
 
 app = Flask(__name__)
 app.config.from_pyfile('app.cfg')
@@ -18,10 +18,10 @@ def home():
 @app.route('/auth', methods=['POST'])
 def auth():
     token_id = request.form['id_token']
+    code = request.form['code']
     redirect_uri = '{0}auth'.format(request.host_url)
     sharepoint_url = tenant_url(token_id, c['AUTHORITY'])
-    assertion = client_assertion(sharepoint_url, c['CLIENT_ID'], c['CERT_THUMBPRINT'], c['CERT_PATH'])
-    session['access_token'] = access_token(sharepoint_url, redirect_uri, c['CLIENT_ID'], c['RESOURCE'], assertion)
+    session['access_token'] = access_token(sharepoint_url, redirect_uri, c['CLIENT_ID'], code, c['CLIENT_SECRET'])
     return redirect(url_for('home'))
 
 @app.route('/upload', methods=['POST'])
