@@ -39,7 +39,6 @@
     <Content Include="app.cfg">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="office365flask.pem" />
     <Content Include="templates\index.html" />
     <Content Include="templates\layout.html" />
     <None Include="office365flask3 - Web Deploy.pubxml" />
