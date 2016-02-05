@@ -7,7 +7,6 @@ def login_url(redirect_uri, client_id, resource, authority):
     params += '&response_type=id_token'
     params += '&scope=openid'
     params += '&nonce='+str(uuid.uuid4())
-    params += '&prompt=admin_consent'
     params += '&response_mode=form_post'
     params += '&resource='+quote(resource)
     return '{0}/common/oauth2/authorize{1}'.format(authority, params)
@@ -21,9 +20,7 @@ def client_assertion(tenant_url, client_id, cert_tprint, cert_path):
     header =  { 'alg': 'RS256', 'x5t': cert_tprint }
     payload = { 'sub': client_id,
                 'iss': client_id,
-                'jti': str(uuid.uuid4()),
                 'exp': now + 900,
-                'nbf': now,
                 'aud': tenant_url }
     key = open(cert_path, 'r').read()
     return jwt.encode(payload, key, 'RS256', header)
@@ -35,13 +32,10 @@ def access_token(tenant_url, redirect_uri, client_id, resource, client_assertion
              'client_assertion': client_assertion,
              'grant_type': 'client_credentials',
              'redirect_uri': redirect_uri }
-    r = requests.post(tenant_url, data=data)
-    return r.json()['access_token']
+    return requests.post(tenant_url, data=data).json()['access_token']
 
 def upload_file(url, fname, file, token):
     headers = { 'Content-Type':'application/json',
-                'Authorization': 'Bearer {0}'.format(token),
-                'Accept': 'application/json'
-               }
+                'Authorization': 'Bearer {0}'.format(token) }
     r = requests.post("{0}/_api/web/lists/getbytitle('Documents')/rootfolder/files/add(url='{1}', overwrite=true)".format(url, fname), data=file, headers=headers)
     return r.status_code == 200
