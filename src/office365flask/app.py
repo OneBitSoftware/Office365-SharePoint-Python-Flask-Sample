@@ -35,7 +35,11 @@ def auth():
     # Constructs Azure AD token issuance endpoint url.
     url = issuance_url(token_id, c['AUTHORITY'])
     # Requests access token and stores it in session.
-    session['access_token'] = access_token(url, redirect_uri, c['CLIENT_ID'], code, c['CLIENT_SECRET'])
+    token = access_token(url, redirect_uri, c['CLIENT_ID'], code, c['CLIENT_SECRET'])
+    if token != '':
+        session['access_token'] = token
+    else:
+        flash('Could not get access token.')
     return redirect(url_for('home'))
 
 @app.route('/upload', methods=['POST'])
@@ -48,9 +52,9 @@ def upload():
         success = upload_file(c['RESOURCE'], file.filename, file.stream.read(), session['access_token'])
         if success:
             # Success flash message if the file is successfully uploaded.
-            flash('You successfully uploaded file {0}'.format(file.filename))
+            flash('You successfully uploaded file {0}.'.format(file.filename))
         else:
-            flash('Could not upload file {0}'.format(file.filename))
+            flash('Could not upload file {0}.'.format(file.filename))
     return redirect(url_for('home'))
 
 

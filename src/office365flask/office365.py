@@ -29,8 +29,11 @@ def access_token(issuance_url, redirect_uri, client_id, code, client_secret):
              'code': code,
              'redirect_uri': redirect_uri }
     # Sends post request to the Azure AD token issuance endpoint with the payload included in the body.
-    # Access token to be aquired on successful response.
-    return requests.post(issuance_url, data=data).json()['access_token']
+    # Access token to be returned on successful response.
+    r = requests.post(issuance_url, data=data)
+    if 'access_token' in r.json():
+        return r.json()['access_token']
+    return ''
 
 def upload_file(url, fname, file, access_token):
     # Sets request headers with the access token included
