@@ -65,3 +65,4 @@ target/
 src/Python.Office365.AppAuthentication/obj/
 src/Python.Office365.AppAuthentication/bin/
 src/Python.Office365.AppAuthentication/env/
+.vs/
