@@ -62,7 +62,6 @@ target/
 .ipynb_checkpoints
 
 # Visual Studio
-src/office365flask/bin/
-src/office365flask/env/
-src/office365flask/obj/
 src/Python.Office365.AppAuthentication/obj/
+src/Python.Office365.AppAuthentication/bin/
+src/Python.Office365.AppAuthentication/env/
