@@ -1,11 +1,11 @@
 import os
 from flask import Flask, request, redirect, session, render_template, url_for, flash
-from office365 import login_url, issuance_url, access_token, upload_file
+from office365 import login_url, issuance_url, access_token, user_details
 
-# Init the flask app.
+# Initialize the flask app.
 app = Flask(__name__)
 
-# Load confuguration variables.
+# Load configuration variables.
 app.config.from_pyfile('app.cfg')
 c = app.config
 
@@ -20,12 +20,17 @@ def home():
     redirect_uri = '{0}auth'.format(request.host_url)
     # Generates Azure AD authorization endpoint url with parameters so the user authenticates and consents, if consent is required.
     url = login_url(redirect_uri, c['CLIENT_ID'], c['RESOURCE'], c['AUTHORITY'])
-    # Renders the index template with additional prams for the login url and a bool is_authenticated if access token is stored in session.
-    return render_template('index.html', url=url, is_authenticated='access_token' in session)
+    user = {}
+    # Checks if access token has already been set in flask session.
+    if 'access_token' in session:
+        # Gets authenticated user details from SharePoint tenant if access token is acquired.
+        user = user_details(c['RESOURCE'], session['access_token'])
+    # Renders the index template with additional params for the login url and user.
+    return render_template('index.html', url=url, user=user)
 
 @app.route('/auth', methods=['POST'])
 def auth():
-    # Handles the Azure AD authorization endpoint response and sends second repsonse to get access token. 
+    # Handles the Azure AD authorization endpoint response and sends second response to get access token.
     # Gets the token_id from the flask response form dictionary.
     token_id = request.form['id_token']
     # Gets the authorization code from the flask response form dictionary.
@@ -41,22 +46,6 @@ def auth():
     else:
         flash('Could not get access token.')
     return redirect(url_for('home'))
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    # Uploads file to SharePoint Tenant.
-    if 'access_token' in session:
-        # File from the submitted upload form.
-        file = request.files['file']
-        # Sends request to SharePoint api with the file.
-        success = upload_file(c['RESOURCE'], file.filename, file.stream.read(), session['access_token'])
-        if success:
-            # Success flash message if the file is successfully uploaded.
-            flash('You successfully uploaded file {0}.'.format(file.filename))
-        else:
-            flash('Could not upload file {0}.'.format(file.filename))
-    return redirect(url_for('home'))
-
 
 # This script runs the application using a development server.
 if __name__ == '__main__':

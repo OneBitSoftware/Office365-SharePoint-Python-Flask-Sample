@@ -22,7 +22,7 @@ def issuance_url(id_token, authority):
     return '{0}/{1}/oauth2/token'.format(authority, tenant_id)
 
 def access_token(issuance_url, redirect_uri, client_id, code, client_secret):
-    # Initialize access token request payload
+    # Initialize access token request payload.
     data = { 'client_id': client_id,
              'client_secret': client_secret,
              'grant_type': 'authorization_code',
@@ -35,10 +35,17 @@ def access_token(issuance_url, redirect_uri, client_id, code, client_secret):
         return r.json()['access_token']
     return ''
 
-def upload_file(url, fname, file, access_token):
-    # Sets request headers with the access token included
+def user_details(sharepoint_url, access_token):
+    # Gets authenticated user details from SharePoint tenant if access token is acquired.
+    details = dict()
+    details['access_token'] = access_token
+    # Sets request headers with the access token included to be sent to SharePoint tenant.
     headers = { 'Content-Type':'application/json',
-                'Authorization': 'Bearer {0}'.format(access_token) }
-    # Post requrest to the SharePoint api with OData query for document upload.
-    r = requests.post("{0}/_api/web/lists/getbytitle('Documents')/rootfolder/files/add(url='{1}', overwrite=true)".format(url, fname), data=file, headers=headers)
-    return r.status_code == 200
+                'Authorization': 'Bearer {0}'.format(access_token),
+                'Accept': 'application/json' }
+    # Get requrest to the SharePoint api with OData query to retrieve current user information.
+    r = requests.get("{0}/_api/web/CurrentUser".format(sharepoint_url), headers=headers)
+    # Gets the user name from the response.
+    if 'Title' in r.json():
+        details['title'] = r.json()['Title']
+    return details
