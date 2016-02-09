@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "office365flask", "src\office365flask\office365flask.pyproj", "{F0B040A4-9418-4459-9190-DAD5CA1FC117}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Python.Office365.AppAuthentication", "src\Python.Office365.AppAuthentication\Python.Office365.AppAuthentication.pyproj", "{F0B040A4-9418-4459-9190-DAD5CA1FC117}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
