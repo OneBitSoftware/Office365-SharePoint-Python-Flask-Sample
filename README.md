@@ -50,7 +50,7 @@ For these tasks to succeed you need to do additional setups explained below.
 - Copy the client secret and the client id from the Azure portal and replace them into the Python Flask config file
 - Assign URL to the SharePoint site you are going to access to the RESOURCE config variable.
 
-![](https://lh3.googleusercontent.com/-OUg3PajgYs8/VrnOirrLdxI/AAAAAAAACZM/eZUz7q88x7U/s616-Ic42/app_config.PNG)
+![](https://lh3.googleusercontent.com/-ETtW5MBuOcA/VrnZDQBAxQI/AAAAAAAACaY/ppp4My1JTlE/s616-Ic42/office365-python-app-config.PNG)
 
 - Open the sample in Visual Studio 2015
 - Go to Project > Properties > Debug and dedicate 5555 for Port Number
