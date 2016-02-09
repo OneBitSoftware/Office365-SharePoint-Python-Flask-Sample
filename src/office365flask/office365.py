@@ -36,7 +36,7 @@ def access_token(issuance_url, redirect_uri, client_id, code, client_secret):
     return ''
 
 def user_details(sharepoint_url, access_token):
-    # Gets authenticated user details from SharePoint tenant if access token is acquired.
+    # Gets authenticated user details from SharePoint tenant.
     details = dict()
     details['access_token'] = access_token
     # Sets request headers with the access token included to be sent to SharePoint tenant.
@@ -45,7 +45,7 @@ def user_details(sharepoint_url, access_token):
                 'Accept': 'application/json' }
     # Get requrest to the SharePoint api with OData query to retrieve current user information.
     r = requests.get("{0}/_api/web/CurrentUser".format(sharepoint_url), headers=headers)
-    # Gets the user name from the response.
+    # Gets the user title from the response.
     if 'Title' in r.json():
         details['title'] = r.json()['Title']
     return details
