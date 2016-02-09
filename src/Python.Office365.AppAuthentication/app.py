@@ -31,20 +31,23 @@ def home():
 @app.route('/auth', methods=['POST'])
 def auth():
     # Handles the Azure AD authorization endpoint response and sends second response to get access token.
-    # Gets the token_id from the flask response form dictionary.
-    token_id = request.form['id_token']
-    # Gets the authorization code from the flask response form dictionary.
-    code = request.form['code']
-    # Constructs redirect uri to be send as query string param to Azure AD token issuance endpoint.
-    redirect_uri = '{0}auth'.format(request.host_url)
-    # Constructs Azure AD token issuance endpoint url.
-    url = issuance_url(token_id, c['AUTHORITY'])
-    # Requests access token and stores it in session.
-    token = access_token(url, redirect_uri, c['CLIENT_ID'], code, c['CLIENT_SECRET'])
-    if token != '':
-        session['access_token'] = token
-    else:
-        flash('Could not get access token.')
+    try:
+        # Gets the token_id from the flask response form dictionary.
+        token_id = request.form['id_token']
+        # Gets the authorization code from the flask response form dictionary.
+        code = request.form['code']
+        # Constructs redirect uri to be send as query string param to Azure AD token issuance endpoint.
+        redirect_uri = '{0}auth'.format(request.host_url)
+        # Constructs Azure AD token issuance endpoint url.
+        url = issuance_url(token_id, c['AUTHORITY'])
+        # Requests access token and stores it in session.
+        token = access_token(url, redirect_uri, c['CLIENT_ID'], code, c['CLIENT_SECRET'])
+        if token != '':
+            session['access_token'] = token
+        else:
+            flash('Could not get access token.')
+    except:
+        flash('Something went wrong.')
     return redirect(url_for('home'))
 
 # This script runs the application using a development server.
