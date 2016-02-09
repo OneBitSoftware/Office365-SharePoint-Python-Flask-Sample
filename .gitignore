@@ -65,3 +65,4 @@ target/
 src/office365flask/bin/
 src/office365flask/env/
 src/office365flask/obj/
+src/Python.Office365.AppAuthentication/obj/
